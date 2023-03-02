@@ -1,0 +1,11 @@
+:root {
+    --gridSize : 16;
+}
+
+.PlayGrid {
+    display: grid;
+    grid-template : repeat(var(--gridSize), 1fr) / repeat(var(--gridSize), 1fr);
+
+    height : 50vw; 
+    width : 50vw; 
+}
