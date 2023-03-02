@@ -1,22 +1,23 @@
-import { ClickOutcome, Roof } from "../MineField"
+import { Roof } from "../MineField"
+import { GameState } from "./App";
 
 export interface ClosedTileProps {
     tileValue : number,
     roofValue : Roof,
-    clickOutcome : ClickOutcome
+    gameState : GameState
 }
 
 
-export default function ClosedTile (props : ClosedTileProps) {
+export default function ClosedTile ({gameState, tileValue, roofValue} : ClosedTileProps) {
 
     let className : string = '';
 
-    if (props.roofValue === Roof.Flag) className = 'Flag';
-    if (props.roofValue === Roof.Question) className = 'Question';
+    if (roofValue === Roof.Flag) className = 'Flag';
+    if (roofValue === Roof.Question) className = 'Question';
 
-    if (props.clickOutcome !== ClickOutcome.GameContinues) {
-        if (props.roofValue === Roof.Flag && props.tileValue !== -1) className = 'Mistake'
-        if (props.roofValue !== Roof.Flag && props.tileValue === -1) className = 'Mine'
+    if (gameState === GameState.Lost || gameState === GameState.Won) {
+        if (roofValue === Roof.Flag && tileValue !== -1) className = 'Mistake'
+        if (roofValue !== Roof.Flag && tileValue === -1) className = 'Mine'
     }
 
     return <div className={`Tile Closed ${className}`}>

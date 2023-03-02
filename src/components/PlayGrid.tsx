@@ -2,6 +2,7 @@ import './css/PlayGrid.css';
 import OpenTile from './OpenTile';
 import ClosedTile from './ClosedTile';
 import MineField, {ClickOutcome, Roof} from '../MineField';
+import { GameState } from './App';
 
 import { useRef, useEffect, useMemo, useState } from 'react';
 import useHTMLElementSizes, {HTMLElementSizes} from '../hooks/useHTMLElementSizes';
@@ -10,12 +11,15 @@ import useHTMLElementSizes, {HTMLElementSizes} from '../hooks/useHTMLElementSize
     x - down, y - right
 */
 
-export default function PlayGrid () {
+export interface PlayGridProps {
+    gameState : GameState,
+    setGameState : React.Dispatch<React.SetStateAction<GameState>>
+}
+
+export default function PlayGrid ({gameState, setGameState} : PlayGridProps) {
 
     const [actions, setActions] = useState(0);
     const [except, setExcept] = useState<number[] | undefined> ();
-
-    const [clickOutcome, setClickOutcome] = useState(ClickOutcome.GameContinues);
 
     const mineField = useMemo(() => {
         return new MineField(except);
@@ -59,12 +63,15 @@ export default function PlayGrid () {
 
             if (except === undefined) {
                 setExcept(calculation);
+                setGameState(GameState.Continue);
                 return;
             }
 
             const outcome = mineField.clickOn(calculation);
 
-            setClickOutcome(outcome);
+            if (outcome === ClickOutcome.Lost) setGameState(GameState.Lost)
+            if (outcome === ClickOutcome.Won) setGameState(GameState.Won)
+
             setActions((prev) => prev + 1);
         }
 
@@ -82,7 +89,7 @@ export default function PlayGrid () {
             setActions((prev) => prev + 1);
         }
 
-        if (clickOutcome !== ClickOutcome.GameContinues) return;
+        if (gameState === GameState.Lost || gameState === GameState.Won) return;
 
         document.addEventListener('mouseup', handleOnLeftClick);
         document.addEventListener('contextmenu', handleOnRightClick);
@@ -91,7 +98,11 @@ export default function PlayGrid () {
             document.removeEventListener('mouseup', handleOnLeftClick);
             document.removeEventListener('contextmenu', handleOnRightClick);
         }
-    }, [actions, sizes, mineField, except, clickOutcome])
+    }, [actions, sizes, mineField, except, gameState, setGameState])
+
+    useEffect(() => {
+        if (gameState === GameState.Preparing) setExcept(undefined);
+    }, [gameState])
 
     return (<div className='PlayGrid' ref={playGridRef}>
         {
@@ -102,7 +113,7 @@ export default function PlayGrid () {
                 <ClosedTile key={`${index1},${index2}`} 
                 tileValue={value} 
                 roofValue={mineField.roofArr[index1][index2]}
-                clickOutcome={clickOutcome}/>
+                gameState={gameState}/>
             })
         }
     </div>)
