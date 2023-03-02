@@ -9,8 +9,15 @@
     true - seen
 */
 
-enum ClickOutcome {
+export enum ClickOutcome {
     GameContinues, Lost, Won
+}
+
+export enum Roof {
+    Open, 
+    Blank,
+    Flag,
+    Question
 }
 
 const size = 16;
@@ -18,33 +25,33 @@ const mineCount = 40;
 
 export default class MineField {
     public readonly arr : number[][];
-    public readonly visibilityArr : boolean[][]
+    public readonly roofArr : Roof[][]
 
     private tilesLeft = size * size - mineCount;
 
-    constructor(clickedOn : number[]) {
+    constructor(clickedOn : number[] | undefined) {
         this.arr = this.createMineFieldArray(clickedOn);
-        this.visibilityArr = this.createVisibilityArray();
+        this.roofArr = this.createRoofArray();
 
-        this.clickOn(clickedOn);
+        if (clickedOn !== undefined) this.clickOn(clickedOn);
     }
 
-    private createVisibilityArray () {
-        const ans : boolean[][] = [];
+    private createRoofArray () {
+        const ans : Roof[][] = [];
 
         // Create size x size array;
 
         for (let i = 0; i < size; i++) {
             ans.push([]);
             for (let j = 0; j < size; j++) {
-                ans[i].push(false);
+                ans[i].push(Roof.Blank);
             }
         }
 
         return ans;
     }
 
-    private createMinesArray (except: number[]) {
+    private createMinesArray (except: number[] | undefined) {
         function getRandomIndex () {
             return Math.floor(Math.random() * (size));
         }
@@ -56,7 +63,8 @@ export default class MineField {
             const x = getRandomIndex();
             const y = getRandomIndex();
 
-            if (x === except[0] && y === except[1]) continue;
+            if (except!== undefined) 
+                if (x === except[0] && y === except[1]) continue;
 
             ans = ans.filter((pair) => (pair[0] !== x || pair[1] !== y));
             ans.push([x, y]);
@@ -65,7 +73,7 @@ export default class MineField {
         return ans;
     }
 
-    private createMineFieldArray (clickedOn : number[]) {
+    private createMineFieldArray (clickedOn : number[] | undefined) {
         const ans : number[][] = [];
 
         // Create size x size array;
@@ -130,7 +138,9 @@ export default class MineField {
     clickOn (pair : number[]) {
 
         // Open stuff up
-        const queue = [pair];
+        const queue = [pair, ...( this.getTilesAround(pair).filter(
+            (pair) => this.arr[pair[0]][pair[1]] === 0) )
+        ];
 
         while (queue.length !== 0) {
 
@@ -138,7 +148,7 @@ export default class MineField {
             
             const [x, y] =  newPair;
 
-            this.visibilityArr[x][y] = true;
+            this.roofArr[x][y] = Roof.Open;
             this.tilesLeft--;
 
             // Stop search if not clear
@@ -150,7 +160,7 @@ export default class MineField {
             tilesAround = tilesAround.filter((pair) => {
                 const [x, y] = pair;
 
-                return !this.visibilityArr[x][y];
+                return this.roofArr[x][y] !== Roof.Open;
             });
 
 
@@ -165,6 +175,27 @@ export default class MineField {
         return ClickOutcome.GameContinues;
     }
 
+    rightClickOn (pair : number[]) {
+
+        const [x, y] = pair;
+
+        const currentValue = this.roofArr[x][y];
+
+        if (currentValue === Roof.Open) return;
+        if (currentValue === Roof.Blank) {
+            this.roofArr[x][y] = Roof.Flag;
+            return;
+        }
+        if (currentValue === Roof.Flag) {
+            this.roofArr[x][y] = Roof.Question;
+            return;
+        }
+        if (currentValue === Roof.Question) {
+            this.roofArr[x][y] = Roof.Blank;
+            return;
+        }
+    }
+
     private map<ArrType, OutType>(arr : ArrType[][], func : (value : ArrType, index1 : number, index2 : number) => OutType) {
         return arr.map((row, index1) => row.map((element, index2) => {
             return func(element, index1, index2);
@@ -175,7 +206,7 @@ export default class MineField {
         return this.map<number, OutType>(this.arr, func);
     }
 
-    mapVisibilityArr<OutType> (func : (value : boolean, index1 : number, index2 : number) => OutType) {
-        return this.map<boolean, OutType>(this.visibilityArr, func);
+    mapVisibilityArr<OutType> (func : (value : Roof, index1 : number, index2 : number) => OutType) {
+        return this.map<Roof, OutType>(this.roofArr, func);
     }
 }
