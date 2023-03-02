@@ -6,6 +6,10 @@
     display: grid;
     grid-template : repeat(var(--gridSize), 1fr) / repeat(var(--gridSize), 1fr);
 
-    height : 50vw; 
-    width : 50vw; 
+    padding: 5px;
+    background-image: url('../../assets/tile/closed_rotated.png');
+    background-size: cover;
+
+    height : 60vh; 
+    width : 60vh; 
 }

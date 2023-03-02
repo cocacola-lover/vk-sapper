@@ -6,7 +6,9 @@ import PlayGrid from './PlayGrid';
 function App() {
   return (
     <div className="App">
-      <PlayGrid></PlayGrid>
+      <div className='Wrapper'>
+        <PlayGrid></PlayGrid>
+      </div>
     </div>
   );
 }
