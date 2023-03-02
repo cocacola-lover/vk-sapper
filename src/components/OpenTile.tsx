@@ -5,7 +5,6 @@ export interface OpenTileProps {
 }
 
 export default function OpenTile (props : OpenTileProps) {
-    return <div className='Tile Open'>
-        {props.tileValue}
+    return <div className={`Tile Open mines${props.tileValue}`}>
     </div>
 }

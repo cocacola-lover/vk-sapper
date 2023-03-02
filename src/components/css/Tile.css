@@ -1,4 +1,52 @@
 .Tile {
     aspect-ratio: 1 / 1;
-    border: 1px solid black;
+    /*border: 1px solid black;*/
+    background-size: cover;
+}
+
+.Closed {
+    background-image: url('../../assets/tile/closed.png');
+}
+.mines-1 {
+    background-image: url('../../assets/tile/mine_exploded.png');
+}
+.mines0 {
+    background-image: url('../../assets/tile/0.png');
+}
+.mines1 {
+    background-image: url('../../assets/tile/1.png');
+}
+.mines2 {
+    background-image: url('../../assets/tile/2.png');
+}
+.mines3 {
+    background-image: url('../../assets/tile/3.png');
+}
+.mines4 {
+    background-image: url('../../assets/tile/4.png');
+}
+.mines5 {
+    background-image: url('../../assets/tile/5.png');
+}
+.mines6 {
+    background-image: url('../../assets/tile/6.png');
+}
+.mines7 {
+    background-image: url('../../assets/tile/7.png');
+}
+.mines8 {
+    background-image: url('../../assets/tile/8.png');
+}
+
+.Flag {
+    background-image: url('../../assets/tile/flag.png');
+}
+.Question {
+    background-image: url('../../assets/tile/question.png');
+}
+.Mistake {
+    background-image: url('../../assets/tile/mine_deactivated.png');
+}
+.Mine {
+    background-image: url('../../assets/tile/mine.png');
 }
