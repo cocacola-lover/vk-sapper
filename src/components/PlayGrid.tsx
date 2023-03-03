@@ -110,7 +110,7 @@ export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsL
             document.removeEventListener('mouseup', handleOnLeftClick);
             document.removeEventListener('contextmenu', handleOnRightClick);
         }
-    }, [actions, sizes, mineField, except, gameState, setGameState])
+    }, [actions, sizes, mineField, except, gameState, setGameState, flagsLeft, setFlagsLeft])
 
     useEffect(() => {
         if (gameState === GameState.Preparing) setExcept(undefined);
