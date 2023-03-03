@@ -17,6 +17,8 @@
     height: 75%;
     background-size: cover;
     background-image: url('/src/assets/smile/smile.png');
+
+    cursor: pointer;
 }
 
 .Smile:active {

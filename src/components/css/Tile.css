@@ -6,6 +6,7 @@
 
 .Closed {
     background-image: url('../../assets/tile/closed.png');
+    cursor: pointer;
 }
 .mines-1 {
     background-image: url('../../assets/tile/mine_exploded.png');
