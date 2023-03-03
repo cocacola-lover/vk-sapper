@@ -14,9 +14,12 @@ import useHTMLElementSizes, {HTMLElementSizes} from '../hooks/useHTMLElementSize
 export interface PlayGridProps {
     gameState : GameState,
     setGameState : React.Dispatch<React.SetStateAction<GameState>>
+
+    flagsLeft : number,
+    setFlagsLeft : React.Dispatch<React.SetStateAction<number>>
 }
 
-export default function PlayGrid ({gameState, setGameState} : PlayGridProps) {
+export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsLeft} : PlayGridProps) {
 
     const [actions, setActions] = useState(0);
     const [except, setExcept] = useState<number[] | undefined> ();
@@ -76,7 +79,6 @@ export default function PlayGrid ({gameState, setGameState} : PlayGridProps) {
         }
 
         function handleOnRightClick (event : MouseEvent) {
-
             
             const calculation = calculatePositionOnBoard(sizes, [event.clientY, event.clientX])
             console.log(calculation);
@@ -85,8 +87,18 @@ export default function PlayGrid ({gameState, setGameState} : PlayGridProps) {
 
             event.preventDefault();
 
-            mineField.rightClickOn(calculation)
-            setActions((prev) => prev + 1);
+            const [x, y] = calculation
+
+            if ( (mineField.roofArr[x][y] === Roof.Blank && flagsLeft > 0) ||
+                    (mineField.roofArr[x][y] !== Roof.Blank)) {
+
+                if (mineField.roofArr[x][y] === Roof.Blank) setFlagsLeft(prev => prev - 1);
+                else if (mineField.roofArr[x][y] === Roof.Question) setFlagsLeft(prev => prev + 1);
+
+                mineField.rightClickOn(calculation)
+                setActions((prev) => prev + 1);    
+                return;
+            }
         }
 
         if (gameState === GameState.Lost || gameState === GameState.Won) return;
