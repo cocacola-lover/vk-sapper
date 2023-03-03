@@ -1,0 +1,41 @@
+.ThreeDigitDisplay {
+    display: flex;
+    height: 70%;
+}
+
+.DigitDisplay {
+    aspect-ratio: 13 / 23;
+    height: 100%;
+    background-size: cover;
+}
+
+.DigitDisplay.Value0 {
+    background-image: url('/src/assets/clock/0.png');
+}
+.DigitDisplay.Value1 {
+    background-image: url('/src/assets/clock/1.png');
+}
+.DigitDisplay.Value2 {
+    background-image: url('/src/assets/clock/2.png');
+}
+.DigitDisplay.Value3 {
+    background-image: url('/src/assets/clock/3.png');
+}
+.DigitDisplay.Value4 {
+    background-image: url('/src/assets/clock/4.png');
+}
+.DigitDisplay.Value5 {
+    background-image: url('/src/assets/clock/5.png');
+}
+.DigitDisplay.Value6 {
+    background-image: url('/src/assets/clock/6.png');
+}
+.DigitDisplay.Value7 {
+    background-image: url('/src/assets/clock/7.png');
+}
+.DigitDisplay.Value8 {
+    background-image: url('/src/assets/clock/8.png');
+}
+.DigitDisplay.Value9 {
+    background-image: url('/src/assets/clock/9.png');
+}

@@ -12,7 +12,16 @@
   user-select: none; /* Standard */
 }
 
+.Wrapper > *{
+  margin: 15px 0px;
+}
+
 .Wrapper {
-  padding: 20px;
+  padding: 0px 10px;
   background-color: #bdbdbd;
+
+  border-right: 5px solid #7b7b7b;
+  border-bottom: 5px solid #7b7b7b;
+  border-left: 5px solid white;
+  border-top: 5px solid white;
 }
