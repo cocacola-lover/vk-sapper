@@ -64,6 +64,11 @@ export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsL
 
             if (calculation === undefined) return;
 
+            if (mineField.roofArr[calculation[0]][calculation[1]] === Roof.Flag || 
+                    mineField.roofArr[calculation[0]][calculation[1]] === Roof.Question) {
+                        setFlagsLeft(prev => prev + 1);
+            }
+
             if (except === undefined) {
                 setExcept(calculation);
                 setGameState(GameState.Continue);
