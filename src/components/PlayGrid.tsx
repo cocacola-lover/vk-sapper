@@ -86,7 +86,6 @@ export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsL
         function handleOnRightClick (event : MouseEvent) {
             
             const calculation = calculatePositionOnBoard(sizes, [event.clientY, event.clientX])
-            console.log(calculation);
 
             if (calculation === undefined) return;
 

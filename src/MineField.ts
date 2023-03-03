@@ -151,8 +151,6 @@ export default class MineField {
             this.roofArr[x][y] = Roof.Open;
             this.tilesLeft--;
             
-            console.log(this.tilesLeft);
-
             // Stop search if not clear
             if (this.arr[x][y] !== 0) continue;
 
