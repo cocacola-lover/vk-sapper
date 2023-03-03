@@ -30,6 +30,11 @@ function App() {
     
   }, [gameState])
 
+  // Handle Flags Left
+  useEffect(() => {
+    if (gameState === GameState.Preparing) setFlagsLeft(0);
+  }, [gameState])
+
   return (
     <div className="App">
       <div className='Wrapper'>
