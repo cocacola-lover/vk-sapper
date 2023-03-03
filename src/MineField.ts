@@ -138,9 +138,7 @@ export default class MineField {
     clickOn (pair : number[]) {
 
         // Open stuff up
-        const queue = [pair, ...( this.getTilesAround(pair).filter(
-            (pair) => this.arr[pair[0]][pair[1]] === 0) )
-        ];
+        const queue = [pair];
 
         while (queue.length !== 0) {
 
@@ -148,8 +146,12 @@ export default class MineField {
             
             const [x, y] =  newPair;
 
+            if (this.roofArr[x][y] === Roof.Open) continue;
+
             this.roofArr[x][y] = Roof.Open;
             this.tilesLeft--;
+            
+            console.log(this.tilesLeft);
 
             // Stop search if not clear
             if (this.arr[x][y] !== 0) continue;
