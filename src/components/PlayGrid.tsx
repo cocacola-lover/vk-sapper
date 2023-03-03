@@ -19,13 +19,14 @@ export interface PlayGridProps {
     setFlagsLeft : React.Dispatch<React.SetStateAction<number>>
 }
 
-export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsLeft} : PlayGridProps) {
+export default function PlayGrid ({gameState, setGameState, setFlagsLeft} : PlayGridProps) {
 
     const [actions, setActions] = useState(0);
     const [except, setExcept] = useState<number[] | undefined> ();
 
     const mineField = useMemo(() => {
-        return new MineField(except);
+        const localMineField = new MineField(except);
+        return localMineField;
     }, [except]);
 
     const playGridRef = useRef<HTMLDivElement>(null);
@@ -64,11 +65,6 @@ export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsL
 
             if (calculation === undefined) return;
 
-            if (mineField.roofArr[calculation[0]][calculation[1]] === Roof.Flag || 
-                    mineField.roofArr[calculation[0]][calculation[1]] === Roof.Question) {
-                        setFlagsLeft(prev => prev + 1);
-            }
-
             if (except === undefined) {
                 setExcept(calculation);
                 setGameState(GameState.Continue);
@@ -76,6 +72,7 @@ export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsL
             }
 
             const outcome = mineField.clickOn(calculation);
+            setFlagsLeft(mineField.FlagsLeft)
 
             if (outcome === ClickOutcome.Lost) setGameState(GameState.Lost)
             if (outcome === ClickOutcome.Won) setGameState(GameState.Won)
@@ -87,22 +84,15 @@ export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsL
             
             const calculation = calculatePositionOnBoard(sizes, [event.clientY, event.clientX])
 
-            if (calculation === undefined) return;
+            if (calculation === undefined || gameState === GameState.Preparing) return;
 
             event.preventDefault();
 
-            const [x, y] = calculation
+            mineField.rightClickOn(calculation);
 
-            if ( (mineField.roofArr[x][y] === Roof.Blank && flagsLeft > 0) ||
-                    (mineField.roofArr[x][y] !== Roof.Blank)) {
+            setActions((prev) => prev + 1);    
+            setFlagsLeft(mineField.FlagsLeft);
 
-                if (mineField.roofArr[x][y] === Roof.Blank) setFlagsLeft(prev => prev - 1);
-                else if (mineField.roofArr[x][y] === Roof.Question) setFlagsLeft(prev => prev + 1);
-
-                mineField.rightClickOn(calculation)
-                setActions((prev) => prev + 1);    
-                return;
-            }
         }
 
         if (gameState === GameState.Lost || gameState === GameState.Won) return;
@@ -114,7 +104,7 @@ export default function PlayGrid ({gameState, setGameState, flagsLeft, setFlagsL
             document.removeEventListener('mouseup', handleOnLeftClick);
             document.removeEventListener('contextmenu', handleOnRightClick);
         }
-    }, [actions, sizes, mineField, except, gameState, setGameState, flagsLeft, setFlagsLeft])
+    }, [actions, sizes, mineField, except, gameState, setGameState, setFlagsLeft])
 
     useEffect(() => {
         if (gameState === GameState.Preparing) setExcept(undefined);

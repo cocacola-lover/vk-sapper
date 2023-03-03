@@ -28,12 +28,17 @@ export default class MineField {
     public readonly roofArr : Roof[][]
 
     private tilesLeft = size * size - mineCount;
+    private flagsLeft = mineCount;
 
     constructor(clickedOn : number[] | undefined) {
         this.arr = this.createMineFieldArray(clickedOn);
         this.roofArr = this.createRoofArray();
 
         if (clickedOn !== undefined) this.clickOn(clickedOn);
+    }
+
+    get FlagsLeft () {
+        return this.flagsLeft
     }
 
     private createRoofArray () {
@@ -148,6 +153,7 @@ export default class MineField {
 
             if (this.roofArr[x][y] === Roof.Open) continue;
 
+            if (this.roofArr[x][y] !== Roof.Blank) this.flagsLeft++;
             this.roofArr[x][y] = Roof.Open;
             this.tilesLeft--;
             
@@ -183,7 +189,9 @@ export default class MineField {
 
         if (currentValue === Roof.Open) return;
         if (currentValue === Roof.Blank) {
+            if (this.flagsLeft < 1) return;
             this.roofArr[x][y] = Roof.Flag;
+            this.flagsLeft--;
             return;
         }
         if (currentValue === Roof.Flag) {
@@ -192,6 +200,7 @@ export default class MineField {
         }
         if (currentValue === Roof.Question) {
             this.roofArr[x][y] = Roof.Blank;
+            this.flagsLeft++;
             return;
         }
     }
