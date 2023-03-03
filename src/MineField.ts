@@ -206,7 +206,7 @@ export default class MineField {
         return this.map<number, OutType>(this.arr, func);
     }
 
-    mapVisibilityArr<OutType> (func : (value : Roof, index1 : number, index2 : number) => OutType) {
+    mapRoofArr<OutType> (func : (value : Roof, index1 : number, index2 : number) => OutType) {
         return this.map<Roof, OutType>(this.roofArr, func);
     }
 }
