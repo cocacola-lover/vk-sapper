@@ -32,7 +32,7 @@ function App() {
 
   // Handle Flags Left
   useEffect(() => {
-    if (gameState === GameState.Preparing) setFlagsLeft(0);
+    if (gameState === GameState.Preparing) setFlagsLeft(40);
   }, [gameState])
 
   return (
