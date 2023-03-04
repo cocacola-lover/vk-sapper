@@ -1,5 +1,9 @@
 import './css/ThreeDigitDisplay.css'
 
+/*
+    Display three-digit number
+*/
+
 export interface ThreeDigitDisplayProps {
     value : number
 }

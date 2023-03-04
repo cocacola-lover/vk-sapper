@@ -1,6 +1,8 @@
 import { useState, useLayoutEffect } from "react";
 
-// Updates Sizes on windowResize Event
+/*
+    Hook used to update HTMLElement's position and size on window resize.
+*/
 
 export interface HTMLElementSizes {
     x : number,

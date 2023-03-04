@@ -1,6 +1,12 @@
 import { Roof } from "../MineField"
 import { GameState } from "./App";
 
+import './css/Tile.css';
+
+/*
+    Tiles displaying information about the game.
+*/
+
 export interface ClosedTileProps {
     tileValue : number,
     roofValue : Roof,
@@ -8,7 +14,12 @@ export interface ClosedTileProps {
 }
 
 
-export default function ClosedTile ({gameState, tileValue, roofValue} : ClosedTileProps) {
+export interface OpenTileProps {
+    tileValue : number,
+}
+
+
+export function ClosedTile ({gameState, tileValue, roofValue} : ClosedTileProps) {
 
     let className : string = '';
 
@@ -20,6 +31,9 @@ export default function ClosedTile ({gameState, tileValue, roofValue} : ClosedTi
         if (roofValue !== Roof.Flag && tileValue === -1) className = 'Mine'
     }
 
-    return <div className={`Tile Closed ${className}`}>
-    </div>    
+    return <div className={`Tile Closed ${className}`}/>
+}
+
+export function OpenTile (props : OpenTileProps) {
+    return <div className={`Tile Open mines${props.tileValue}`}/>
 }

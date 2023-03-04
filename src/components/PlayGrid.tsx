@@ -1,6 +1,5 @@
 import './css/PlayGrid.css';
-import OpenTile from './OpenTile';
-import ClosedTile from './ClosedTile';
+import { OpenTile, ClosedTile } from './Tile';
 import MineField, {ClickOutcome, Roof} from '../MineField';
 import { GameState } from './App';
 
@@ -8,6 +7,8 @@ import { useRef, useEffect, useMemo, useState } from 'react';
 import useHTMLElementSizes, {HTMLElementSizes} from '../hooks/useHTMLElementSizes';
 
 /*
+    Display MineField class to the user. And handles signal transmission between them.
+
     x - down, y - right
 */
 
@@ -21,17 +22,21 @@ export interface PlayGridProps {
 
 export default function PlayGrid ({gameState, setGameState, setFlagsLeft} : PlayGridProps) {
 
+    // Actions are used for force rerender on change of mineField.
+    // There are better ways to do this. But for this project this seemed good enough.
     const [actions, setActions] = useState(0);
+
+    // Which tile shoud not have a mine. Is set to undefined on Gamestate.Preparing
     const [except, setExcept] = useState<number[] | undefined> ();
 
-    const mineField = useMemo(() => {
-        const localMineField = new MineField(except);
-        return localMineField;
-    }, [except]);
+    const mineField = useMemo(
+        () =>  new MineField(except)
+    , [except]);
 
     const playGridRef = useRef<HTMLDivElement>(null);
     const sizes = useHTMLElementSizes(playGridRef);
 
+    // Handles right and left click on the game field.
     useEffect(() => {
         function calculatePositionOnBoard (sizes : HTMLElementSizes, mousePosition : number[]) {
 
@@ -59,25 +64,30 @@ export default function PlayGrid ({gameState, setGameState, setFlagsLeft} : Play
 
         function handleOnLeftClick (event : MouseEvent) {
 
+            // Works only on leftClick
             if (event.button !== 0) return;
 
             const calculation = calculatePositionOnBoard(sizes, [event.clientY, event.clientX])
 
+            // Return if click somehow out of board
             if (calculation === undefined) return;
 
-            if (except === undefined) {
+            if (gameState === GameState.Preparing) {
+
                 setExcept(calculation);
                 setGameState(GameState.Continue);
-                return;
             }
+            else if (gameState === GameState.Continue) {
+            
+                const outcome = mineField.clickOn(calculation);
+                // Making sure flags are up to date
+                setFlagsLeft(mineField.FlagsLeft)
 
-            const outcome = mineField.clickOn(calculation);
-            setFlagsLeft(mineField.FlagsLeft)
+                if (outcome === ClickOutcome.Lost) setGameState(GameState.Lost)
+                if (outcome === ClickOutcome.Won) setGameState(GameState.Won)
 
-            if (outcome === ClickOutcome.Lost) setGameState(GameState.Lost)
-            if (outcome === ClickOutcome.Won) setGameState(GameState.Won)
-
-            setActions((prev) => prev + 1);
+                setActions((prev) => prev + 1);
+            }
         }
 
         function handleOnRightClick (event : MouseEvent) {
@@ -86,12 +96,13 @@ export default function PlayGrid ({gameState, setGameState, setFlagsLeft} : Play
 
             if (calculation === undefined || gameState === GameState.Preparing) return;
 
+            // Prevent Context Menu from appearing
             event.preventDefault();
 
             mineField.rightClickOn(calculation);
 
-            setActions((prev) => prev + 1);    
             setFlagsLeft(mineField.FlagsLeft);
+            setActions((prev) => prev + 1);    
 
         }
 
@@ -106,6 +117,7 @@ export default function PlayGrid ({gameState, setGameState, setFlagsLeft} : Play
         }
     }, [actions, sizes, mineField, except, gameState, setGameState, setFlagsLeft])
 
+    // Make sure game resets on GameState.Preparing
     useEffect(() => {
         if (gameState === GameState.Preparing) setExcept(undefined);
     }, [gameState])
@@ -115,7 +127,9 @@ export default function PlayGrid ({gameState, setGameState, setFlagsLeft} : Play
             mineField.mapArr((value, index1, index2) => {
 
                 return mineField.roofArr[index1][index2] === Roof.Open ? 
+
                 <OpenTile key={`${index1},${index2}`} tileValue={value}/> :
+                
                 <ClosedTile key={`${index1},${index2}`} 
                 tileValue={value} 
                 roofValue={mineField.roofArr[index1][index2]}

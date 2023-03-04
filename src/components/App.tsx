@@ -4,6 +4,10 @@ import './css/App.css';
 import PlayGrid from './PlayGrid';
 import UpperBar from './UpperBar';
 
+/*
+  Handles communication between UpperBar and PlayGrid.
+*/
+
 export enum GameState {
   Preparing,
   Continue,
@@ -39,6 +43,7 @@ function App() {
     <div className="App">
       <div className='Wrapper'>
         <UpperBar flagsLeft={flagsLeft} timer={timer} gameState={gameState} setGameState={setGameState}/>
+
         <PlayGrid 
         gameState={gameState} 
         setGameState={setGameState}

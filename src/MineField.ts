@@ -1,12 +1,23 @@
 
 /*
-    MineFieldArr values : 
-    -1 - mine,
-    0, 1, 2... - mines around.
+    Class Minefield holds all the logic of the game.
+    It holds all the values, alters them during the game and checks for stop condition.
 
-    VisibilityArr value : 
-    false - not seen
-    true - seen
+    Constructor argument : except - passes position of the square which should not have a mine.
+    
+    Class Properties : 
+
+    this.arr - holds two-dimensional array that describes how many mines there are around each tile.
+    (-1 - mine, 0, 1, 2... - mines around.)
+
+    this.roofArr : describes how cover of the tile looks like using 'Roof'.
+
+    this.flagsLeft : how many flags left for user to use
+
+    this.tilesLeft : how many tiles left to discover until win.
+
+    this.onClick : returns ClickOutcome after click on position
+    this.onRightClick : doesn't return anything but alters this.roofArr accordingly
 */
 
 export enum ClickOutcome {

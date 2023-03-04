@@ -1,6 +1,11 @@
 import { GameState } from "./App"
 import { useState, useEffect } from "react";
 
+/*
+    Watches over the state of the game while changing expressions.
+    Also serves as a reset button. 
+*/
+
 export interface SmileProps {
     gameState : GameState,
     setGameState : React.Dispatch<React.SetStateAction<GameState>>

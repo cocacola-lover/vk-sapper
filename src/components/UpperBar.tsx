@@ -4,6 +4,10 @@ import Smile from './Smile';
 import { GameState } from './App';
 import ThreeDigitDisplay from './ThreeDigitDisplay';
 
+/*
+    Upper Bar of the game.
+*/
+
 export interface UpperBarProps {
     gameState : GameState,
     setGameState : React.Dispatch<React.SetStateAction<GameState>>
